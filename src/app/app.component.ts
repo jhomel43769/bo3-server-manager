@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  imports: [DashboardComponent],
+  template: '<app-dashboard></app-dashboard>',
+  styles: []
 })
 export class AppComponent {
   title = 'bo3-server-manager';
