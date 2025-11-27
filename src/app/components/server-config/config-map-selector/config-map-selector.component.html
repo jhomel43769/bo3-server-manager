@@ -8,11 +8,11 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div *ngFor="let map of maps(); trackBy: trackByMapId">
-         (click)="selectMap.emit(map.id)" 
-         [class.ring-2]="selectedMapId() === map.id"
-         [class.ring-bo3-orange]="selectedMapId() === map.id"
-         [class.bg-gray-700/50]="selectedMapId() === map.id"
-         class="bg-gray-900 border border-gray-700 rounded-lg p-4 cursor-pointer hover:border-bo3-orange transition-all transform hover:scale-105">
+          <!-- (click)="selectMap.emit(map.id)" 
+          [class.ring-2]="selectedMapId() === map.id"
+          [class.ring-bo3-orange]="selectedMapId() === map.id"
+          [class.bg-gray-700/50]="selectedMapId() === map.id"
+          class="bg-gray-900 border border-gray-700 rounded-lg p-4 cursor-pointer hover:border-bo3-orange transition-all transform hover:scale-105"> -->
       
       <div class="flex items-start justify-between mb-2">
         <h4 class="font-semibold text-white">{{ map.name }}</h4>
