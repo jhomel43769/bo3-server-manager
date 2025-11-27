@@ -1,0 +1,29 @@
+    <div class="mb-8">
+      <h3 class="text-lg font-bold text-bo3-orange mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Información General
+      </h3>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Nombre del Servidor</label>
+          <input type="text" 
+                 [value]="config().serverName"
+                 (input)="updateField.emit({field: 'serverName', value: $any($event.target).value})"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
+                 placeholder="Mi Servidor BO3 Zombies" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Puerto</label>
+          <input type="number" 
+                 [value]="config().port"
+                 (input)="updateField.emit({field: 'port', value: +$any($event.target).value})"
+                 class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
+                 min="1024" max="65535" />
+          <p class="text-xs text-gray-400 mt-1">Puerto por defecto: 27017</p>
+        </div>
+      </div>
+    </div>

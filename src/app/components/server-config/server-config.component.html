@@ -1,199 +1,63 @@
-<!-- Modal Overlay -->
 @if (isOpen()) {
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+    <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-slideUp">
+      
+      <!-- Header -->
+      <div class="bg-linear-to-r from-bo3-orange to-bo3-red p-6 flex items-center justify-between">
+        <h2 class="text-2xl font-bold">⚙️ Configuración del Servidor</h2>
+        <button (click)="close()" class="text-white hover:text-gray-200 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-    <!-- Modal Content -->
-    <div
-        class="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden animate-slideUp">
-
-        <!-- Header -->
-        <div class="bg-linear-to-r from-bo3-orange to-bo3-red p-6 flex items-center justify-between">
-            <h2 class="text-2xl font-bold">⚙️ Configuración del Servidor</h2>
-            <button (click)="close()" class="text-white hover:text-gray-200 transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Warning si el servidor está corriendo -->
-        @if (isRunning()) {
+      <!-- Warning -->
+      @if (isRunning()) {
         <div class="bg-yellow-900/30 border-l-4 border-yellow-500 p-4 m-6">
-            <div class="flex items-center gap-3">
-                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                        clip-rule="evenodd" />
-                </svg>
-                <div>
-                    <p class="font-semibold text-yellow-500">Servidor en ejecución</p>
-                    <p class="text-sm text-yellow-400">Los cambios se aplicarán al reiniciar el servidor</p>
-                </div>
+          <div class="flex items-center gap-3">
+            <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            <div>
+              <p class="font-semibold text-yellow-500">Servidor en ejecución</p>
+              <p class="text-sm text-yellow-400">Los cambios se aplicarán al reiniciar el servidor</p>
             </div>
+          </div>
         </div>
-        }
+      }
 
-        <!-- Form Content (con scroll) -->
-        <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+      <!-- Form Content -->
+      <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+        <app-config-general 
+          [config]="formConfig()"
+          (updateField)="onUpdateField($event)" />
 
-            <!-- Información General -->
-            <div class="mb-8">
-                <h3 class="text-lg font-bold text-bo3-orange mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Información General
-                </h3>
+        <app-config-map-selector 
+          [maps]="maps()"
+          [selectedMapId]="formConfig().map"
+          (selectMap)="updateField('map', $event)" />
 
-                <div class="space-y-4">
-                    <!-- Nombre del Servidor -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            Nombre del Servidor
-                        </label>
-                        <input type="text" [value]="formConfig().serverName"
-                            (input)="updateField('serverName', $any($event.target).value)"
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
-                            placeholder="Mi Servidor BO3 Zombies" />
-                    </div>
+        <app-config-players 
+          [maxPlayers]="formConfig().maxPlayers"
+          (updateMaxPlayers)="updateField('maxPlayers', $event)" />
 
-                    <!-- Puerto -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            Puerto
-                        </label>
-                        <input type="number" [value]="formConfig().port"
-                            (input)="updateField('port', +$any($event.target).value)"
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
-                            min="1024" max="65535" />
-                        <p class="text-xs text-gray-400 mt-1">Puerto por defecto: 27017</p>
-                    </div>
-                </div>
-            </div>
+        <app-config-security 
+          [password]="formConfig().password"
+          [rconPassword]="formConfig().rconPassword"
+          (updateField)="onUpdateField($event)" />
+      </div>
 
-            <!-- Selección de Mapa -->
-            <div class="mb-8">
-                <h3 class="text-lg font-bold text-bo3-orange mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                    </svg>
-                    Seleccionar Mapa
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @for (map of maps(); track map.id) {
-                    <div (click)="updateField('map', map.id)" [class.ring-2]="formConfig().map === map.id"
-                        [class.ring-bo3-orange]="formConfig().map === map.id"
-                        [class.bg-gray-700/50]="formConfig().map === map.id"
-                        class="bg-gray-900 border border-gray-700 rounded-lg p-4 cursor-pointer hover:border-bo3-orange transition-all transform hover:scale-105">
-
-                        <div class="flex items-start justify-between mb-2">
-                            <h4 class="font-semibold text-white">{{ map.name }}</h4>
-                            @if (formConfig().map === map.id) {
-                            <svg class="w-5 h-5 text-bo3-orange" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            }
-                        </div>
-
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="text-gray-400">{{ map.dlc }}</span>
-                            <span [class.text-green-400]="map.size === 'Muy Pequeño' || map.size === 'Pequeño'"
-                                [class.text-yellow-400]="map.size === 'Mediano'"
-                                [class.text-orange-400]="map.size === 'Grande'"
-                                [class.text-red-400]="map.size === 'Muy Grande'" class="font-semibold">
-                                {{ map.size }}
-                            </span>
-                        </div>
-                    </div>
-                    }
-                </div>
-            </div>
-
-            <!-- Configuración de Jugadores -->
-            <div class="mb-8">
-                <h3 class="text-lg font-bold text-bo3-orange mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Configuración de Jugadores
-                </h3>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">
-                        Máximo de Jugadores: {{ formConfig().maxPlayers }}
-                    </label>
-                    <input type="range" [value]="formConfig().maxPlayers"
-                        (input)="updateField('maxPlayers', +$any($event.target).value)" min="1" max="8"
-                        class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" />
-                    <div class="flex justify-between text-xs text-gray-400 mt-1">
-                        <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Seguridad -->
-            <div class="mb-8">
-                <h3 class="text-lg font-bold text-bo3-orange mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                    Seguridad
-                </h3>
-
-                <div class="space-y-4">
-                    <!-- Contraseña del Servidor -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            Contraseña del Servidor (Opcional)
-                        </label>
-                        <input type="text" [value]="formConfig().password"
-                            (input)="updateField('password', $any($event.target).value)"
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
-                            placeholder="Dejar vacío para servidor público" />
-                        <p class="text-xs text-gray-400 mt-1">Los jugadores necesitarán esta contraseña para conectarse
-                        </p>
-                    </div>
-
-                    <!-- RCON Password -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">
-                            Contraseña RCON
-                        </label>
-                        <input type="text" [value]="formConfig().rconPassword"
-                            (input)="updateField('rconPassword', $any($event.target).value)"
-                            class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-bo3-orange focus:outline-none transition-colors"
-                            placeholder="admin123" />
-                        <p class="text-xs text-gray-400 mt-1">Para administración remota del servidor</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="bg-gray-900 border-t border-gray-700 p-6 flex justify-end gap-4">
-            <button (click)="close()"
-                class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold transition-colors">
-                Cancelar
-            </button>
-            <button (click)="save()"
-                class="px-6 py-3 bg-bo3-orange hover:bg-orange-600 rounded-lg font-semibold transition-colors">
-                Guardar Cambios
-            </button>
-        </div>
+      <!-- Footer -->
+      <div class="bg-gray-900 border-t border-gray-700 p-6 flex justify-end gap-4">
+        <button (click)="close()" class="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-semibold transition-colors">
+          Cancelar
+        </button>
+        <button (click)="save()" class="px-6 py-3 bg-bo3-orange hover:bg-orange-600 rounded-lg font-semibold transition-colors">
+          Guardar Cambios
+        </button>
+      </div>
 
     </div>
-</div>
+  </div>
+}
