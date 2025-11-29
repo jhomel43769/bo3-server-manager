@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:config": "node --env-file=.env src/test-config.js",
+    "test:config": "node --env-file=.env src/tests/test-config.js",
     "dev": "nodemon --env-file=.env src/server.js"
   },
   "keywords": [],
